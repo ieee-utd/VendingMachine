@@ -8,7 +8,7 @@ const int Blu2=25;
 const int Ylw1=24;
 const int Ylw2=23;
 
-//buttons pin definitions (should be changed when the button pin is known
+//buttons pin definitions (should be changed when the button pin is known)
 const int upButton = 0;
 const int leftButton = 1;
 const int rightButton = 2;
@@ -29,19 +29,14 @@ int buttons[6] = {upButton,leftButton,rightButton,downButton,resetButton,confirm
 
 
 
+//Below is code that doesn't need to be changed if adding more LED
+//
 
-
-
-//Below is code that doesn't need to be changed unless my code is poo poo :(((
 int r = 0, c = 0;
 int timePassed = 0;
 
 bool checkTimeOut(){
-  if (timePassed > TIMEOUT * 1000){
-    return true;
-  }else{
-    return false;
-  }
+  return (timePassed > TIMEOUT * 1000);
 }
 void OrderConfirmed(){
   //Check if it is in timeout
@@ -57,7 +52,7 @@ void OrderConfirmed(){
    delay(500);
   }
   
-  //Reset the machine
+  //Reset the location
   r = 0, c = 0;
   
 }
@@ -80,7 +75,7 @@ void buttonPressed(int input){
      }case resetButton:{//Reset
        r = 0, c = 0;
        break;
-     }case confirmButton:{//Confirm the order, should set motor power
+     }case confirmButton:{//Confirm
        OrderConfirmed();
        return;
      }
@@ -98,17 +93,18 @@ void buttonPressed(int input){
      c = maxX - 1;
    }
    
-   do {//Keep looping if the button is still pressed
-     if (timePassed >= TIMEOUT * 1000){
+   do {
+     //Keep looping if the button is still pressed
+     if (checkTimeOut()){
       r = 0, c = 0;
      }
      timePassed = 0;
-   }while(digitalRead(input) == 1);
+   }while(digitalRead(input));
   }
 };
 
 void setup() {
-  // put your setup code here, to run once:
+  
   //8 output LEDs
   for (int i = 0; i < maxY; i++){
     for (int j = 0; j < maxX; j++){
