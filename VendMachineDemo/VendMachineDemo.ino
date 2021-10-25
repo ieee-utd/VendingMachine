@@ -9,12 +9,12 @@ const int Ylw1=24;
 const int Ylw2=23;
 
 //buttons pin definitions (should be changed when the button pin is known)
-const int upButton = 0;
-const int leftButton = 1;
-const int rightButton = 2;
-const int downButton = 3;
-const int resetButton = 4;
-const int confirmButton = 5;
+const int upButton = 1;
+const int leftButton = 2;
+const int rightButton = 3;
+const int downButton = 4;
+const int resetButton = 5;
+const int confirmButton = 6;
 
 //CONFIG
 int TIMEOUT = 10; //In Minutes
@@ -114,7 +114,7 @@ void setup() {
 
   //6 Input Buttons
   for (int i = 0; i < maxButtons; i++){
-    pinMode(buttons[i],OUTPUT);
+    pinMode(buttons[i],INPUT);
   }
   
   
