@@ -17,11 +17,14 @@
 #define RIGHT 37
 #define LEFT 36
 #define CONFIRM 24
+#define RESET 6
 
 int row = 0;
 int column = 0;
 int Led[4][2] = {Led00,Led01,Led10,Led11,Led20,Led21,Led30,Led31};
-int Button[5] = {UP, DOWN, RIGHT, LEFT,CONFIRM};
+int Button[6] = {UP, DOWN, RIGHT, LEFT, CONFIRM, RESET};
+int timeStart = 0;
+int timeCount = 0;
 
 // Turn on Led at row a and column b
 void turnOnLed (int a, int b)
@@ -39,10 +42,9 @@ void turnOnLed (int a, int b)
         }
         
       }
-  
 }
 
-void turnOffLed ()
+void turnOffAllLed ()
  {
   for ( int i=0; i < 4; i++)
       for ( int j=0; j < 2; j++) 
@@ -51,12 +53,23 @@ void turnOffLed ()
       }
 }
 
+void turnOnAllLed ()
+{
+  for ( int i=0; i < 4; i++)
+      for ( int j=0; j < 2; j++) 
+      {
+           digitalWrite(Led[i][j], HIGH);
+      }
+}
+
+
 // Change row or column when pushing button
 void pushButtons (int a)
 {
       // UP
       if (a == 0)
       {
+        timeCount = 0;
         if (row == 0)
         {
            row = 3;
@@ -70,6 +83,7 @@ void pushButtons (int a)
       // DOWN
       if (a == 1)
       {
+        timeCount = 0;
         if (row == 3)
         {
            row = 0;
@@ -83,6 +97,7 @@ void pushButtons (int a)
       // RIGHT
       if (a == 2)
       {
+        timeCount = 0;
         if (column == 1)
         {
            column = 0;
@@ -96,6 +111,7 @@ void pushButtons (int a)
       // LEFT
       if (a == 3)
       {
+        timeCount = 0;
         if (column == 0)
         {
            column = 1;
@@ -105,21 +121,44 @@ void pushButtons (int a)
           column--;
         }
       }
+      
       // CONFIRM
       if (a == 4)
       {
-        turnOffLed();
+        turnOffAllLed();
         delay(500);
         turnOnLed(row,column);
         delay(500);
-        turnOffLed();
+        turnOffAllLed();
         delay(500);
         turnOnLed(row,column);
         // Control motor
-        delay(1000);
+        delay(500);
+        turnOffAllLed();
+        delay(500);
         row = 0;
         column = 0;
+        timeStart = 0;
+        timeCount = 0;
       }      
+
+      // RESET
+      if (a == 5)
+      {
+        turnOnAllLed();
+        delay(500);
+        turnOffAllLed();
+        delay(500);
+        turnOnAllLed();
+        delay(500);
+        turnOffAllLed();
+        delay(500);
+        row = 0;
+        column = 0;
+        timeStart = 0;
+        timeCount = 0;
+      }
+      
 }
 
   
@@ -139,6 +178,7 @@ void setup()
   pinMode(RIGHT, INPUT); 
   pinMode(LEFT, INPUT);
   pinMode(CONFIRM, INPUT); 
+  pinMode(RESET, INPUT); 
     
   // Start the selection, turn on led 00
   turnOnLed (0,0);
@@ -147,14 +187,26 @@ void setup()
 void loop()
 { 
   //Check if any button is pushed
-    for (int i=0; i < 5; i++)
+    for (int i=0; i < 6; i++)
     {
       if (digitalRead(Button[i]) == HIGH)
       {
+      timeStart = 1;   
       pushButtons(i);
       turnOnLed(row,column);
       }
       while(digitalRead(Button[i]) == HIGH);
+    }
+    
+    if (timeStart == 1) 
+    {
+      timeCount++;
+    }
+    
+    if (timeCount == 10000) 
+    {
+      pushButtons(5); //RESET 
+      turnOnLed(row,column);
     }
     
     delay(1); // Delay a little bit to improve simulation performance
