@@ -1,20 +1,20 @@
 //LED pin definitions
-const int Red1=30;
-const int Red2=29;
+const int Red1=27;
+const int Red2=7;
 const int Grn1=28;
-const int Grn2=27;
-const int Blu1=26;
-const int Blu2=25;
-const int Ylw1=24;
-const int Ylw2=23;
+const int Grn2=8;
+const int Blu1=29;
+const int Blu2=9;
+const int Ylw1=30;
+const int Ylw2=10;
 
 //buttons pin definitions (should be changed when the button pin is known)
-const int upButton = 1;
-const int leftButton = 2;
-const int rightButton = 3;
-const int downButton = 4;
-const int resetButton = 5;
-const int confirmButton = 6;
+const int upButton = 39;
+const int leftButton = 36;
+const int rightButton = 37;
+const int downButton = 18;
+const int resetButton = 6;
+const int confirmButton = 24;
 
 //CONFIG
 int TIMEOUT = 10; //In Minutes
@@ -59,6 +59,7 @@ void OrderConfirmed(){
 
 void buttonPressed(int input){
  if (digitalRead(input)) {
+  Serial.print(input);
    switch(input) {
      case upButton:{//Up
        r--;
@@ -116,6 +117,8 @@ void setup() {
   for (int i = 0; i < maxButtons; i++){
     pinMode(buttons[i],INPUT);
   }
+
+  Serial.begin(9600);
   
   
 }
