@@ -1,27 +1,27 @@
 //LED pin definitions
-const int Red1=27;
-const int Red2=7;
-const int Grn1=28;
-const int Grn2=8;
-const int Blu1=29;
-const int Blu2=9;
-const int Ylw1=30;
-const int Ylw2=10;
+const int Red1=30;
+const int Red2=10;
+const int Grn1=29;
+const int Grn2=9;
+const int Blu1=28;
+const int Blu2=8;
+const int Ylw1=27;
+const int Ylw2=7;
 
 //buttons pin definitions (should be changed when the button pin is known)
-const int upButton = 39;
-const int leftButton = 36;
-const int rightButton = 37;
-const int downButton = 18;
+const int upButton = 36;
+const int leftButton = 18;
+const int rightButton = 39;
+const int downButton = 37;
 const int resetButton = 6;
 const int confirmButton = 24;
 
 //CONFIG
 int TIMEOUT = 10; //In Minutes
 
-int maxX = 2;
-int maxY = 4;
-int positionLed[4][2] = {{Red1,Red2},{Grn1,Grn2},{Blu1,Blu2},{Ylw1,Ylw2}};
+const int maxX = 4;
+const int maxY = 2;
+int positionLed[maxX][maxY] = {{Red1,Red2},{Grn1,Grn2},{Blu1,Blu2},{Ylw1,Ylw2}};
 
 int maxButtons = 6;
 int buttons[6] = {upButton,leftButton,rightButton,downButton,resetButton,confirmButton};
@@ -62,16 +62,16 @@ void buttonPressed(int input){
   Serial.print(input);
    switch(input) {
      case upButton:{//Up
-       r--;
-       break;
-     }case leftButton:{//Left
        c--;
        break;
+     }case leftButton:{//Left
+       r--;
+       break;
      }case rightButton:{//Right
-       c++;
+       r++;
        break;
      }case downButton:{//Down
-       r++;
+       c++;
        break;
      }case resetButton:{//Reset
        r = 0, c = 0;
@@ -83,15 +83,15 @@ void buttonPressed(int input){
   }
    
    //check for out of bound, and set it to location
-   if (r >= maxY){
+   if (r >= maxX){
      r = 0;
    }else if (r < 0){
-     r = maxY - 1;
+     r = maxX - 1;
    }
-   if (c >= maxX){
+   if (c >= maxY){
      c = 0;
    }else if (c < 0){
-     c = maxX - 1;
+     c = maxY - 1;
    }
    
    do {
@@ -107,8 +107,8 @@ void buttonPressed(int input){
 void setup() {
   
   //8 output LEDs
-  for (int i = 0; i < maxY; i++){
-    for (int j = 0; j < maxX; j++){
+  for (int i = 0; i < maxX; i++){
+    for (int j = 0; j < maxY; j++){
       pinMode(positionLed[i][j],OUTPUT);
     }
   }
@@ -125,8 +125,8 @@ void setup() {
 
 void loop() {
   //turn everything off
-  for (int i = 0; i < maxY; i++){
-    for (int j = 0; j < maxX; j++){
+  for (int i = 0; i < maxX; i++){
+    for (int j = 0; j < maxY; j++){
       digitalWrite(positionLed[i][j],LOW);
     }
   }
